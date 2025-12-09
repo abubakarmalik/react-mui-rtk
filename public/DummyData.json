@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Alice Smith",
+    "email": "alice.smith@example.com",
+    "phone": "555-123-4567",
+    "address": "123 Main St, Anytown, USA"
+  },
+  {
+    "id": 2,
+    "name": "Bob Johnson",
+    "email": "bob.johnson@example.com",
+    "phone": "555-987-6543",
+    "address": "456 Oak Ave, Otherville, USA"
+  },
+  {
+    "id": 3,
+    "name": "Charlie Brown",
+    "email": "charlie.brown@example.com",
+    "phone": "555-555-1212",
+    "address": "789 Pine Ln, Somewhere, USA"
+  }
+]
