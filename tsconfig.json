@@ -7,7 +7,7 @@
     "module": "ESNext",
     "moduleResolution": "Node",
 
-    "strict": false,
+    "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -15,7 +15,7 @@
 
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "allowJs": true
+    "allowJs": false
   },
   "include": ["src"]
 }

@@ -38,9 +38,13 @@ export default function TableList() {
     setIsLoading(false);
   }, [todos]);
 
-  const handleOnDelete = (id: string) => {
+  const handleOnDelete = (row: Todo) => {
+    if (!row.id) {
+      toast.error('Invalid Todo ID');
+      return;
+    }
     toast.promise(
-      dispatch(removeTodoAsync(id))
+      dispatch(removeTodoAsync(row.id))
         .unwrap()
         .then(() => dispatch(fetchTodos())),
       {
@@ -56,8 +60,8 @@ export default function TableList() {
     navigate('/add', { state: { todoToEdit: todo } });
   };
 
-  const handleOnView = (id: string) => {
-    navigate(`/todos/${id}`);
+  const handleOnView = (row: Todo) => {
+    navigate(`/todos/${row.id}`);
   };
 
   return (
@@ -155,20 +159,20 @@ export default function TableList() {
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{row.email}</TableCell>
 
-                  <TableCell
-                    align="center"
-                    onClick={() => handleOnView(row.id)}
-                  >
-                    <VisibilityIcon sx={{ fontSize: 18, color: '#fff ' }} />
+                  <TableCell align="center" onClick={() => handleOnView(row)}>
+                    <VisibilityIcon
+                      sx={{ fontSize: 18, color: '#fff ', cursor: 'pointer' }}
+                    />
                   </TableCell>
                   <TableCell align="center" onClick={() => handleOnEdit(row)}>
-                    <EditIcon sx={{ fontSize: 18, color: '#4fc3f7' }} />
+                    <EditIcon
+                      sx={{ fontSize: 18, color: '#4fc3f7', cursor: 'pointer' }}
+                    />
                   </TableCell>
-                  <TableCell
-                    align="center"
-                    onClick={() => handleOnDelete(row.id)}
-                  >
-                    <DeleteIcon sx={{ fontSize: 18, color: '#f44336' }} />
+                  <TableCell align="center" onClick={() => handleOnDelete(row)}>
+                    <DeleteIcon
+                      sx={{ fontSize: 18, color: '#f44336', cursor: 'pointer' }}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

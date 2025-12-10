@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 
 // types and interfaces
 interface FormDataType {
-  id: string | null;
+  id?: string ;
   name: string;
   email: string;
   phone: string;
@@ -28,7 +28,7 @@ const AddForm = () => {
   const { todoToEdit } = state || {};
 
   const [formData, setFormData] = useState<FormDataType>({
-    id: null,
+    id: '',
     name: '',
     email: '',
     phone: '',
@@ -38,7 +38,7 @@ const AddForm = () => {
   useEffect(() => {
     if (todoToEdit) {
       setFormData({
-        id: todoToEdit.id || null,
+        id: todoToEdit.id || '',
         name: todoToEdit.name || '',
         email: todoToEdit.email || '',
         phone: todoToEdit.phone || '',
@@ -77,7 +77,7 @@ const AddForm = () => {
     } catch (error) {
       console.log(error);
     } finally {
-      setFormData({ id: null, name: '', email: '', phone: '', address: '' });
+      setFormData({ id: '', name: '', email: '', phone: '', address: '' });
     }
   };
 

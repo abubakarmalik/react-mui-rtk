@@ -25,7 +25,7 @@ export const addTodoAsync = createAsyncThunk<
 >('todos/add', async (item) => item);
 
 export const editTodoAsync = createAsyncThunk<Todo, Todo>(
-  'todos/edit',   
+  'todos/edit',
   async (item) => item,
 );
 
