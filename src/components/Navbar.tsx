@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, MouseEvent } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,16 +12,24 @@ import MenuItem from '@mui/material/MenuItem';
 import HomeIcon from '@mui/icons-material/Home';
 import { Link } from 'react-router-dom';
 
-const pages = [
+// Types pages
+
+interface Page {
+  name: string;
+  path: string;
+}
+
+const pages: Page[] = [
   { name: 'Home', path: '/' },
   { name: 'Todos', path: 'todos' },
   { name: 'Add New', path: '/add' },
 ];
 
 function Navbar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  // anchorElNav can be either an HTML Element or null
+  const [anchorElNav, setAnchorElNav] = useState<HTMLElement | null>(null);
 
-  const handleOpenNavMenu = (event) => {
+  const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
 
@@ -46,7 +54,6 @@ function Navbar() {
             noWrap
             component={Link}
             to="/"
-            href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -107,7 +114,6 @@ function Navbar() {
             noWrap
             component={Link}
             to="/"
-            href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
