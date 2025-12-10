@@ -3,6 +3,16 @@ import { router } from './routes/AppRoutes';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Toaster } from 'react-hot-toast';
 
+declare module '@mui/material/styles' {
+  interface PaletteColor {
+    background?: string;
+  }
+
+  interface SimplePaletteColorOptions {
+    background?: string;
+  }
+}
+
 const theme = createTheme({
   palette: {
     primary: {

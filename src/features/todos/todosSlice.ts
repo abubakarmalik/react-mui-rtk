@@ -1,31 +1,35 @@
 import { createSlice, nanoid, createAsyncThunk } from '@reduxjs/toolkit';
+import { Todo } from '../../types/types';
 
-const initialState = {
+// types and interface
+interface TodoState {
+  todos: Todo[];
+  loading: boolean;
+  error: string | null;
+}
+
+const initialState: TodoState = {
   todos: [],
   loading: false,
   error: null,
 };
 
-export const fetchTodos = createAsyncThunk('todos/fetch', async () => {
-  const saved = JSON.parse(localStorage.getItem('todos'));
-
-  if (!Array.isArray(saved)) {
-    localStorage.setItem('todos', JSON.stringify([]));
-    return [];
-  }
-
-  return saved;
+export const fetchTodos = createAsyncThunk<Todo[]>('todos/fetch', async () => {
+  const saved = JSON.parse(localStorage.getItem('todos') || '[]');
+  return Array.isArray(saved) ? saved : [];
 });
 
-export const addTodoAsync = createAsyncThunk('todos/add', async (item) => {
-  return item;
-});
+export const addTodoAsync = createAsyncThunk<
+  Omit<Todo, 'id'>,
+  Omit<Todo, 'id'>
+>('todos/add', async (item) => item);
 
-export const editTodoAsync = createAsyncThunk('todos/edit', async (item) => {
-  return item;
-});
+export const editTodoAsync = createAsyncThunk<Todo, Todo>(
+  'todos/edit',   
+  async (item) => item,
+);
 
-export const removeTodoAsync = createAsyncThunk(
+export const removeTodoAsync = createAsyncThunk<string, string>(
   'todos/remove',
   async (id) => id,
 );
@@ -46,13 +50,13 @@ export const todosSlice = createSlice({
       })
       .addCase(fetchTodos.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Failed to fetch';
+        state.error = action.error.message || 'Failed to fetch';
       })
       // add todo
       .addCase(addTodoAsync.fulfilled, (state, action) => {
-        const newTodo = {
+        const newTodo: Todo = {
           ...action.payload,
-          id: action.payload.id || nanoid(),
+          id: nanoid(),
         };
         state.todos.push(newTodo);
         localStorage.setItem('todos', JSON.stringify(state.todos));
@@ -76,5 +80,4 @@ export const todosSlice = createSlice({
   },
 });
 
-export const selectTodos = (state) => state.todos.todos;
 export default todosSlice.reducer;

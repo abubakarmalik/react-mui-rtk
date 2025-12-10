@@ -4,25 +4,25 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { useSelector } from 'react-redux';
-import { selectTodos } from '../features/todos/todosSlice';
+import { todosSelector } from '../app/hooks';
 import { useEffect, useState } from 'react';
 import { Box, Skeleton } from '@mui/material';
+import { Todo } from '../types/types';
 
 export default function DetailsCard() {
-  const { id } = useParams();
-  const [isLoading, setIsLoading] = useState(true);
-  const [todo, setTodo] = useState({});
-  const todos = useSelector(selectTodos);
+  const { id } = useParams<{ id: string }>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [todo, setTodo] = useState<Todo | null>(null);
+  const todos = todosSelector() as Todo[];
   const navigate = useNavigate();
 
   useEffect(() => {
-    const todo = todos.find((todo) => todo.id === id);
+    const todo = todos.find((todo) => todo.id === id) || null;
     setTodo(todo);
     if (todo) {
       setIsLoading(false);
     }
-  }, [todo]);
+  }, [id, todos]);
 
   const handleOnClick = () => {
     navigate('/todos');

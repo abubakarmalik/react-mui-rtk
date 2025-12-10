@@ -1,19 +1,33 @@
 import { Paper, TextField, Button, Box } from '@mui/material';
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { addTodoAsync, editTodoAsync } from '../features/todos/todosSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch } from '../app/hooks';
 import { useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
+// types and interfaces
+interface FormDataType {
+  id: string | null;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+}
+
+interface LocationSateType {
+  todoToEdit?: FormDataType;
+}
+
 const AddForm = () => {
   // creating dispatch
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   // creating location
   const location = useLocation();
-  const { todoToEdit } = location.state || {};
+  const state = location.state as LocationSateType;
+  const { todoToEdit } = state || {};
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormDataType>({
     id: null,
     name: '',
     email: '',
@@ -31,31 +45,33 @@ const AddForm = () => {
         address: todoToEdit.address || '',
       });
     }
-  }, []);
+  }, [todoToEdit]);
 
-  const handleOnChange = (e) => {
+  const handleOnChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleOnSubmit = (e) => {
+  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
       const { id, name, email, phone, address } = formData;
-      const thunk = id;
+      const isEdit = Boolean(id);
 
       return toast.promise(
         dispatch(
-          thunk
+          isEdit
             ? editTodoAsync({ id, name, email, phone, address })
             : addTodoAsync({ name, email, phone, address }),
         ),
         {
-          loading: thunk ? 'Updating' : 'Saving...',
-          success: thunk ? <b>Todo Updated</b> : <b>Todo Added</b>,
-          error: thunk ? <b>Failed to Update</b> : <b>Failed to Save</b>,
+          loading: isEdit ? 'Updating' : 'Saving...',
+          success: isEdit ? <b>Todo Updated</b> : <b>Todo Added</b>,
+          error: isEdit ? <b>Failed to Update</b> : <b>Failed to Save</b>,
         },
       );
     } catch (error) {

@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  selectTodos,
-  fetchTodos,
-  removeTodoAsync,
-} from '../features/todos/todosSlice';
+import { useAppDispatch, todosSelector } from '../app/hooks';
+import { fetchTodos, removeTodoAsync } from '../features/todos/todosSlice';
 import { useNavigate } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -19,29 +15,30 @@ import Skeleton from '@mui/material/Skeleton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Box } from '@mui/material';
 import toast from 'react-hot-toast';
+import { Todo } from '../types/types';
 
 export default function TableList() {
   //states
-  const [isLoading, setIsLoading] = useState(true);
-  const [todoToEdit, setTodoToEdit] = useState(null);
-  const [rows, setRows] = useState([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [todoToEdit, setTodoToEdit] = useState<Todo | null>(null);
+  const [rows, setRows] = useState<Todo[]>([]);
   //select store states
-  const todos = useSelector(selectTodos);
+  const todos = todosSelector();
   // create dispatch
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   // create navigator
   const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchTodos());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     setRows(todos);
     setIsLoading(false);
   }, [todos]);
 
-  const handleOnDelete = (id) => {
+  const handleOnDelete = (id: string) => {
     toast.promise(
       dispatch(removeTodoAsync(id))
         .unwrap()
@@ -54,12 +51,12 @@ export default function TableList() {
     );
   };
 
-  const handleOnEdit = (todo) => {
+  const handleOnEdit = (todo: Todo) => {
     setTodoToEdit({ ...todo });
     navigate('/add', { state: { todoToEdit: todo } });
   };
 
-  const handleOnView = (id) => {
+  const handleOnView = (id: string) => {
     navigate(`/todos/${id}`);
   };
 
